@@ -1,0 +1,37 @@
+server:
+  port: 40000
+  shutdown: graceful
+  reactive:
+    session:
+      timeout: 15m
+
+spring:
+  application:
+    name: edge-service
+  devtools:
+    livereload:
+      port: 41000
+    restart:
+      poll-interval: 10s
+      quiet-period: 2s
+
+  security:
+    oauth2:
+      client:
+        registration:
+          customer1:
+            client-id: ms1
+            client-secret: szCAVPumWkSvvmDn0llCmmZJzN9X3ml8
+            scope: openid
+        provider:
+          customer1:
+            issuer-uri: ${AUTH_SERVER_URL:http://localhost:38000}/realms/customer1
+  docker:
+    compose:
+      lifecycle-management: start_only
+
+logging:
+  level:
+    org.springframework.security: TRACE
+    org.springframework.web: TRACE
+    

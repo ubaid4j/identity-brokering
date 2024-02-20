@@ -1,0 +1,41 @@
+version: "3.9"
+services:
+  keycloak-identity-server:
+    image: quay.io/keycloak/keycloak:23.0.6
+    container_name: keycloak-identity-server
+    command: start-dev --http-port 38000 --import-realm
+    volumes:
+      - ./keycloak/identity-server/data:/opt/keycloak/data/import
+      - ./keycloak/identity-server/health-check.sh:/opt/keycloak/health-check.sh
+    environment:
+      - KEYCLOAK_ADMIN=user
+      - KEYCLOAK_ADMIN_PASSWORD=password
+      - KC_HTTP_PORT=38000
+      - KC_HEALTH_ENABLED=true
+    ports:
+      - "127.0.0.1:38000:38000"
+    healthcheck:
+      test: "bash /opt/keycloak/health-check.sh"
+      interval: 5s
+      timeout: 10s
+      retries: 12
+  keycloak-identity-provider:
+    image: quay.io/keycloak/keycloak:23.0.6
+    container_name: keycloak-identity-provider
+    command: start-dev --http-port 39000 --import-realm
+    volumes:
+      - ./keycloak/identity-provider/data:/opt/keycloak/data/import
+      - ./keycloak/identity-provider/health-check.sh:/opt/keycloak/health-check.sh
+    environment:
+      - KEYCLOAK_ADMIN=user
+      - KEYCLOAK_ADMIN_PASSWORD=password
+      - KC_HTTP_PORT=39000
+      - KC_HEALTH_ENABLED=true
+    ports:
+      - "127.0.0.1:39000:39000"
+    healthcheck:
+      test: "bash /opt/keycloak/health-check.sh"
+      interval: 5s
+      timeout: 10s
+      retries: 12
+
